@@ -1,0 +1,107 @@
+INSURANCE POLICY DATABASE
+
+
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    date_of_birth DATE,
+    gender VARCHAR(10),
+    contact_number VARCHAR(20),
+    email VARCHAR(255),
+    address TEXT
+);
+CREATE TABLE policies (
+    policy_id INT PRIMARY KEY,
+    policy_name VARCHAR(255),
+    policy_type VARCHAR(50),
+    coverage_details TEXT,
+    premium DECIMAL(10, 2),
+    start_date DATE,
+    end_date DATE
+);
+CREATE TABLE claims (
+    claim_id INT PRIMARY KEY,
+    claim_date DATE,
+    claim_amount DECIMAL(10, 2),
+    approved_amount DECIMAL(10, 2),
+    claim_status VARCHAR(20),
+    policy_id INT,
+    customer_id INT,
+    FOREIGN KEY (policy_id) REFERENCES policies(policy_id),
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);
+CREATE TABLE agents (
+    agent_id INT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    contact_number VARCHAR(20),
+    email VARCHAR(255),
+    hire_date DATE
+);
+CREATE TABLE policy_assignments (
+    assignment_id INT PRIMARY KEY,
+    customer_id INT,
+    policy_id INT,
+    start_date DATE,
+    end_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+    FOREIGN KEY (policy_id) REFERENCES policies(policy_id)
+);
+CREATE TABLE claim_processing (
+    processing_id INT PRIMARY KEY,
+    claim_id INT,
+    processing_date DATE,
+    payment_amount DECIMAL(10, 2),
+    payment_date DATE,
+    agent_id INT,
+    FOREIGN KEY (claim_id) REFERENCES claims(claim_id),
+    FOREIGN KEY (agent_id) REFERENCES agents(agent_id)
+);
+
+ALTER TABLE agents
+ADD COLUMN new_column_name data_type;
+-- Replace "new_column_name" and "data_type" with actual column name and data type.
+
+ALTER TABLE policies
+RENAME COLUMN policy_name TO policy_title;
+
+ALTER TABLE customers
+DROP COLUMN address;
+
+INSERT INTO policies (policy_id, policy_name, policy_type, coverage_details, premium, start_date, end_date)
+VALUES (1, 'Health Insurance', 'Health', 'Medical expenses coverage', 500, '2022-01-01', '2023-01-01');
+-- Adjust values accordingly.
+
+UPDATE claims
+SET approved_amount = 1000
+WHERE claim_id = 123;
+-- Replace 123 with the actual claim ID.
+
+
+DELETE FROM agents
+WHERE agent_id = 456;
+-- Replace 456 with the actual agent ID.
+
+SELECT c.claim_id, c.claim_date, c.claim_amount, c.approved_amount,
+       cu.first_name AS customer_first_name, cu.last_name AS customer_last_name
+FROM claims c
+JOIN customers cu ON c.customer_id = cu.customer_id;
+
+
+SELECT p.policy_id, p.policy_name, p.policy_type, a.first_name AS agent_first_name, a.last_name AS agent_last_name
+FROM policies p
+JOIN agents a ON p.agent_id = a.agent_id
+WHERE a.agent_id = 789;
+-- Replace 789 with the actual agent ID.
+
+
+SELECT c.claim_id, c.processing_date, c.payment_amount,
+       a.first_name AS agent_first_name, a.last_name AS agent_last_name
+FROM claim_processing c
+JOIN agents a ON c.agent_id = a.agent_id
+WHERE a.agent_id = 789;
+-- Replace 789 with the actual agent ID.
+
+
+
