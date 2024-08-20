@@ -1,0 +1,108 @@
+LIBRARY MANAGEMENT SYSTEM
+
+
+CREATE TABLE books (
+    book_id INT PRIMARY KEY,
+    title VARCHAR(255),
+    author_id INT,
+    publication_year INT,
+    genre VARCHAR(50),
+    isbn VARCHAR(20),
+    available_copies INT
+);
+
+
+CREATE TABLE authors (
+    author_id INT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    date_of_birth DATE,
+    nationality VARCHAR(50)
+);
+
+
+CREATE TABLE members (
+    member_id INT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    date_of_birth DATE,
+    contact_number VARCHAR(20),
+    email VARCHAR(255),
+    membership_date DATE
+);
+
+
+CREATE TABLE loans (
+    loan_id INT PRIMARY KEY,
+    book_id INT,
+    member_id INT,
+    loan_date DATE,
+    return_date DATE,
+    actual_return_date DATE
+);
+
+
+CREATE TABLE staff (
+    staff_id INT PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    position VARCHAR(50),
+    contact_number VARCHAR(20),
+    email VARCHAR(255),
+    hire_date DATE
+);
+
+ALTER TABLE books
+ADD COLUMN new_column_name data_type;
+-- Replace "new_column_name" and "data_type" with actual column name and data type.
+
+ALTER TABLE staff
+RENAME COLUMN position TO job_title;
+ALTER TABLE members
+DROP COLUMN email;
+
+INSERT INTO books (book_id, title, author_id, publication_year, genre, isbn, available_copies)
+VALUES (1, 'Sample Book', 101, 2022, 'Fiction', '1234567890', 5);
+-- Adjust values accordingly.
+
+UPDATE members
+SET contact_number = 'New Contact Number'
+WHERE member_id = 123;
+-- Replace 123 with the actual member ID.
+
+
+DELETE FROM loans
+WHERE loan_id = 456;
+-- Replace 456 with the actual loan ID.
+
+INSERT INTO loans (loan_id, book_id, member_id, loan_date, return_date)
+VALUES (789, 101, 123, '2022-08-20', '2022-09-20');
+-- Adjust values accordingly.
+
+SELECT b.title, a.first_name, a.last_name
+FROM books b
+JOIN authors a ON b.author_id = a.author_id;
+
+
+
+SELECT b.title, m.first_name, m.last_name
+FROM books b
+JOIN loans l ON b.book_id = l.book_id
+JOIN members m ON l.member_id = m.member_id
+WHERE l.status = 'On Loan';
+
+SELECT b.title
+FROM books b
+JOIN loans l ON b.book_id = l.book_id
+WHERE l.member_id = 123;
+-- Replace 123 with the actual member ID.
+
+SELECT genre, COUNT(*) AS total_books, SUM(available_copies) AS total_available_copies
+FROM books
+GROUP BY genre;
+
+SELECT first_name, last_name, hire_date
+FROM staff
+WHERE job_title = 'Librarian';
+
+
